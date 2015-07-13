@@ -1,0 +1,10 @@
+Data Set Sources 
+
+1	smscollection.zip	https://archive.ics.uci.edu/ml/datasets.html
+2	spambase.zip	https://archive.ics.uci.edu/ml/datasets.html
+3 	winequality.zip	https://archive.ics.uci.edu/ml/datasets.html
+4	heart.zip 	https://archive.ics.uci.edu/ml/datasets.html
+5 	UCLA_Admission.zip http://www.ats.ucla.edu/stat/r/dae/logit.htm
+6 	Bank.zip 	https://archive.ics.uci.edu/ml/datasets.html
+7 	magazine.zip	http://logisticregressionanalysis.com/303-what-a-logistic-regression-data-set-looks-like-an-example/
+8	GiveMeCredit	https://www.kaggle.com/c/GiveMeSomeCredit
