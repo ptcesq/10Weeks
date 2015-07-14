@@ -9,6 +9,8 @@ spam <- read.csv("./data/spambase.data", header=FALSE)
 cols <- read.table("./data/cols.txt", quote="\"", stringsAsFactors=FALSE)
 colnames(spam) <- cols$V1
 rm(cols)
+spam$ans <- factor(spam$class, labels=c("spam", "ham"))
+
 
 # create test and training sets 
 inTrain <- sample(1:nrow(spam), nrow(spam) * 0.85) # select 85% of the items 
@@ -17,7 +19,7 @@ test <- spam[-inTrain, ]
 rm(spam, inTrain)
 
 # Lets start with a standard glm 
-model <- glm(train$spam ~ ., data=train)
+model <- glm(train$spam ~ ., data=train, family=binomial(link="logit"))
 predicted <- predict(model, test, "response" )
 results <- as.data.frame(cbind(test$spam, predicted))
 colnames(results) <- c("actual", "predicted")
