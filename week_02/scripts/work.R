@@ -9,7 +9,7 @@ spam <- read.csv("./data/spambase.data", header=FALSE)
 cols <- read.table("./data/cols.txt", quote="\"", stringsAsFactors=FALSE)
 colnames(spam) <- cols$V1
 rm(cols)
-spam$class <- factor(spam$class, labels=c("spam", "ham"))
+# spam$class <- factor(spam$class, labels=c("spam", "ham"))
 
 
 # create test and training sets 
@@ -20,9 +20,12 @@ rm(spam, inTrain)
 
 # Lets start with a standard glm 
 model <- glm(train$class ~ ., data=train, family=binomial(link="logit"))
-predicted <- predict(model, test, "response" )
-results <- as.data.frame(cbind(test$spam, predicted))
-colnames(results) <- c("actual", "predicted")
+predicted <- predict(model, test, type=c("response" ))
+results <- as.data.frame(cbind(test$class, predicted))
+colnames(results) <- c("actual", "odds")
+results$pred <- ifelse(results$odds < 0.5, 0, 1)
+
+
 
 library(ROCR)
 # precision recall graph 
