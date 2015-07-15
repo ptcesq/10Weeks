@@ -1,5 +1,5 @@
 # set seed 
-#set.seed(6678)
+set.seed(6678)
 
 
 # Load data into system 
