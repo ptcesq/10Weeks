@@ -1,5 +1,5 @@
 # set seed 
-set.seed(1234)
+#set.seed(6678)
 
 
 # Load data into system 
@@ -29,7 +29,7 @@ results$pred <- ifelse(results$odds < 0.5, 0, 1)
 
 library(ROCR)
 # precision recall graph 
-pred <- prediction(results$predicted, results$actual)
+pred <- prediction(results$pred, results$actual)
 
 ## computing a simple ROC curve (x-axis: fpr, y-axis: tpr)
 perf <- performance(pred,"tpr","fpr")
@@ -43,18 +43,12 @@ abline(a=0, b=1)
 
 # Contingency Table 
 library(gmodels)
-with(ct, CrossTable(spam, ham))
+with(results, CrossTable(pred, actual, prop.chisq=FALSE, 
+                         prop.r=FALSE, prop.c=FALSE, prop.t=FALSE, 
+                         format="SPSS"))
 
 
 
-## precision/recall curve (x-axis: recall, y-axis: precision)
-perf1 <- performance(pred, "prec", "rec")
-plot(perf1)
-
-## sensitivity/specificity curve (x-axis: specificity,
-## y-axis: sensitivity)
-perf2 <- performance(pred, "sens", "spec")
-plot(perf2)
 
 
 
