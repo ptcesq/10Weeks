@@ -40,6 +40,13 @@ main.label <- paste("ROC Curve - AUC=", ROC.Val)
 plot(perf, colorize=TRUE, main=main.label)
 abline(a=0, b=1)
 
+
+# Contingency Table 
+library(gmodels)
+with(ct, CrossTable(spam, ham))
+
+
+
 ## precision/recall curve (x-axis: recall, y-axis: precision)
 perf1 <- performance(pred, "prec", "rec")
 plot(perf1)
