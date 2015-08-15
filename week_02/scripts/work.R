@@ -29,7 +29,7 @@ results$pred <- ifelse(results$odds < 0.5, 0, 1)
 
 library(ROCR)
 # precision recall graph 
-pred <- prediction(results$predicted, results$actual)
+pred <- prediction(results$actual, results$pred)
 
 ## computing a simple ROC curve (x-axis: fpr, y-axis: tpr)
 perf <- performance(pred,"tpr","fpr")
@@ -43,7 +43,7 @@ abline(a=0, b=1)
 
 # Contingency Table 
 library(gmodels)
-with(ct, CrossTable(spam, ham))
+with(results, CrossTable(actual, pred))
 
 
 
