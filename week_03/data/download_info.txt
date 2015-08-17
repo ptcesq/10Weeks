@@ -1,1 +1,0 @@
-Data Set down loaded from http://archive.ics.uci.edu/ml/machine-learning-databases/car/ on 8/14/15 (PTC).  

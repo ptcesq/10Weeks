@@ -1,0 +1,1 @@
+DOwnloaded from https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/ on 8/16/15 (ptc). 
