@@ -4,6 +4,6 @@ This repository is a pet project of mine dealing with dichotomous classification
 
 The challenge is to model all of the dataset within a given period, e.g. 10 datasets in 10 days, weeks, months or years.  If you choose days you probably have too much free time on your hands; if you choose weeks you have a day job and modeling is a passion; if you choose months you probably have a job kids and not enough time to spare; if you choose years, well your just a slacker (just like me).  
 
-Good Luck and feel free to submit you take on the project.  I would welcome scripts, markdown files or just plain old graphs.  
+Good Luck and feel free to submit your take on the project.  I would welcome scripts, markdown files or just plain old graphs.  
 
 
