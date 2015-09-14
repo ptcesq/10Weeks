@@ -1,36 +1,33 @@
-# set seed 
-set.seed(6678)
-
-
-# Load data into system 
-spam <- read.csv("D:\\R_Projects\\10weeks\\10Weeks\\week_02_Spambase\\data\\spambase.data", header=FALSE)
-
-# add column names 
-cols <- read.table("D:\\R_Projects\\10weeks\\10Weeks\\week_02_Spambase\\data\\cols.txt", quote="\"", stringsAsFactors=FALSE)
-colnames(spam) <- cols$V1
+data <- read.csv("C:/Users/Patrick/OneDrive/R_Projects/10_Weeks/week_03_Cars/data/car_data.csv", header=FALSE)
+cols <- read.csv("C:/Users/Patrick/OneDrive/R_Projects/10_Weeks/week_03_Cars/data/cols.txt", sep="", stringsAsFactors=FALSE)
+colnames(data) <- cols$value
+data$acceptable <- as.factor(ifelse(data$acceptable == "unacc", 0, 1))
 rm(cols)
-spam$class <- factor(spam$class, labels=c("spam", "ham"))
 
 
 # create test and training sets 
-inTrain <- sample(1:nrow(spam), nrow(spam) * 0.85) # select 85% of the items 
-train <- spam[inTrain, ]
-test <- spam[-inTrain, ]
-rm(spam, inTrain)
+inTrain <- sample(1:nrow(data), nrow(data) * 0.85) # select 85% of the items 
+train <- data[inTrain, ]
+test <- data[-inTrain, ]
+rm(data, inTrain)
 
 # Lets start with a standard glm 
-model <- glm(train$class ~ ., data=train, family=binomial(link="logit"))
+model <- glm(train$acceptable ~ ., data=train, family=binomial(link="logit"))
 predicted <- predict(model, test, type=c("response" ))
-results <- as.data.frame(cbind(test$class, predicted))
+results <- as.data.frame(cbind(test$acceptable, predicted))
+results$V1 <- ifelse(results$V1 == 1, 0, 1)
 colnames(results) <- c("actual", "odds")
 results$pred <- ifelse(results$odds < 0.5, 0, 1)
-results$actual <- ifelse(results$actual == 2, 1, 0)
+
 
 # Contingency Table 
 library(gmodels)
-with(results, CrossTable(actual, pred, prop.chisq=FALSE, 
+with(results, CrossTable(actual, pred))
+with(results, CrossTable(pred, actual, prop.chisq=FALSE, 
                          prop.r=FALSE, prop.c=FALSE, prop.t=FALSE, 
                          format="SPSS"))
+
+
 
 
 library(ROCR)
@@ -54,13 +51,6 @@ with(results, CrossTable(actual, pred))
 with(results, CrossTable(pred, actual, prop.chisq=FALSE, 
                          prop.r=FALSE, prop.c=FALSE, prop.t=FALSE, 
                          format="SPSS"))
-
-
-
-
-
-
-
 
 
 
