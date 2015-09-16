@@ -1,7 +1,8 @@
 data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
 cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
+
 colnames(data) <- cols$col_name
-data$acceptable <- as.factor(ifelse(data$acceptable == "unacc", 0, 1))
+data$party <- as.factor(ifelse(data$party == "republican", 0, 1))
 rm(cols)
 
 
