@@ -1,5 +1,15 @@
-data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
-cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
+# Set Seed 
+set.seed(1234)
+
+
+# Unix Version 
+data <- read.csv("~/R/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
+cols <- read.table("~/R/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
+
+
+# Windows Version 
+# data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
+# cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
 
 colnames(data) <- cols$col_name
 data$party <- as.factor(ifelse(data$party == "republican", 0, 1))
@@ -13,9 +23,9 @@ test <- data[-inTrain, ]
 rm(data, inTrain)
 
 # Lets start with a standard glm 
-model <- glm(train$acceptable ~ ., data=train, family=binomial(link="logit"))
+model <- glm(train$party ~ ., data=train, family=binomial(link="logit"))
 predicted <- predict(model, test, type=c("response" ))
-results <- as.data.frame(cbind(test$acceptable, predicted))
+results <- as.data.frame(cbind(test$party, predicted))
 results$V1 <- ifelse(results$V1 == 1, 0, 1)
 colnames(results) <- c("actual", "odds")
 results$pred <- ifelse(results$odds < 0.5, 0, 1)
@@ -23,7 +33,6 @@ results$pred <- ifelse(results$odds < 0.5, 0, 1)
 
 # Contingency Table 
 library(gmodels)
-with(results, CrossTable(actual, pred))
 with(results, CrossTable(pred, actual, prop.chisq=FALSE, 
                          prop.r=FALSE, prop.c=FALSE, prop.t=FALSE, 
                          format="SPSS"))
