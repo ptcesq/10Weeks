@@ -3,9 +3,8 @@ set.seed(1234)
 
 
 # Unix Version 
-data <- read.table("~/R/10Weeks/week_07_Credit/data/german.csv", quote="\"")
-cols <- read.table("~/R/10Weeks/week_07_Credit/data/cols.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
-
+data <- read.csv("~/R/10Weeks/week_05_News/data/OnlineNewsPopularity.csv", stringsAsFactors=FALSE)
+cols <- read.table("~/R/10Weeks/week_05_News/data/col_names.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
 
 
 
@@ -16,22 +15,19 @@ cols <- read.table("~/R/10Weeks/week_07_Credit/data/cols.txt", header=TRUE, quot
 colnames(data) <- cols$col_name
 
 # rename target as target 
-# Don't need to, done in this case. 
-# colnames(data)[61] <- "target"
+colnames(data)[61] <- "target"
 
 #
 # set threshold 
 # or transform dicotomous 
-# 
 #
-data$target <- as.factor(ifelse(data$target == 1, 0, 1))
+data$target <- as.factor(ifelse(data$target <= 1400, 0, 1))
 rm(cols)
 
 # 
 # In this data set we need to remove the URL (adds nothing to the model and confuses it) 
-# don't need in this case. 
 #
-# data <- subset(data, select = -c(url))
+data <- subset(data, select = -c(url))
 
 
 
