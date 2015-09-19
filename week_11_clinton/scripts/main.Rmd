@@ -1,0 +1,178 @@
+---
+title: "Exploring Hillary Clinton's Emails"
+author: "Ben Hamner"
+---
+
+So far, [Hillary Clinton has released 7,945 emails](https://www.hillaryclinton.com/hillarys-emails-four-sentences/) in response to a FOIA request. The original emails (released as PDF documents) are available on the [State Department's Website](https://foia.state.gov/Search/Results.aspx?collection=Clinton_Email).
+
+I've transformed this data to two more digestable formats: CSV files and a SQLite database. You can download this transformed data [on Kaggle](https://www.kaggle.com/c/hillary-clinton-emails/data), see the code used to create it [on GitHub](https://github.com/benhamner/hillary-clinton-emails), and share your analytics on [Kaggle Scripts](https://www.kaggle.com/c/hillary-clinton-emails/data).
+
+The transformation process currently has many imperfections, contributions to improve it are welcome!
+
+Let's connect to the database and start exploring it.
+
+```{r include=FALSE}
+library.warn <- library
+library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+  logical.return = FALSE, warn.conflicts = TRUE, quietly = FALSE,
+  verbose = getOption("verbose")) {
+  if (!character.only) {
+    package <- as.character(substitute(package))
+  }
+
+  suppressPackageStartupMessages(library.warn(
+    package, help, pos, lib.loc, character.only = TRUE,
+    logical.return, warn.conflicts, quietly, verbose))}
+```
+
+```{r}
+library(RSQLite)
+db <- dbConnect(dbDriver("SQLite"), "../input/database.sqlite")
+```
+
+
+```{r include=FALSE}
+library(xtable)
+print.table <- function(table) {
+  html <- print(xtable(table), type="html", print.results=FALSE, include.rownames=FALSE)
+  cat(paste0("<div style='width:800; overflow:auto; border-width: 2;'><style>td {padding: 3px;} th {padding: 3px;}</style>", html, "</div>"))
+}
+```
+
+First, let's see what tables we have to work with
+
+```{r results='asis'} 
+library(dplyr)
+tables <- dbGetQuery(db, "SELECT Name FROM sqlite_master WHERE type='table'")
+colnames(tables) <- c("Name")
+tables <- tables %>%
+          rowwise() %>%
+          mutate(RowCount=dbGetQuery(db, paste0("SELECT COUNT(Id) RowCount FROM ", Name))$RowCount[1])
+print.table(tables)
+```
+
+The emails table contains 7,945 emails that Hillary Clinton sent or received, and the Persons table contains ~500 senders and receivers.
+
+Who sent the most messages?
+
+```{r, fig.height=4, fig.width=8}
+commonSenders <- dbGetQuery(db, "
+SELECT p.Name, COUNT(p.Name) NumEmailsSent
+FROM Emails e
+INNER JOIN Persons p ON e.SenderPersonId=p.Id
+GROUP BY p.Name
+ORDER BY COUNT(p.Name) DESC
+LIMIT 10")
+
+library(ggplot2)
+ggplot(commonSenders, aes(x=reorder(Name, NumEmailsSent), y=NumEmailsSent)) +
+  geom_bar(stat="identity", fill="#53cfff") +
+  coord_flip() + 
+  theme_light(base_size=16) +
+  xlab("") +
+  ylab("Number of Emails Sent") + 
+  theme(plot.title=element_text(size=14))
+
+commonRecipients <- dbGetQuery(db, "
+SELECT p.Name, COUNT(p.Name) NumEmailsReceived
+FROM Emails e
+INNER JOIN EmailReceivers r ON r.EmailId=e.Id
+INNER JOIN Persons p ON r.PersonId=p.Id
+GROUP BY p.Name
+ORDER BY COUNT(p.Name) DESC
+LIMIT 10")
+
+library(ggplot2)
+ggplot(commonRecipients, aes(x=reorder(Name, NumEmailsReceived), y=NumEmailsReceived)) +
+  geom_bar(stat="identity", fill="#53cfff") +
+  coord_flip() + 
+  theme_light(base_size=16) +
+  xlab("") + 
+  ylab("Number of Emails Received") + 
+  theme(plot.title=element_text(size=14))
+```
+
+Let's look at a sample of some of the messages Hillary Clinton wrote.
+
+```{r results='asis'}
+emailsFromHillary <- dbGetQuery(db, "
+SELECT p.Name Sender,
+       ExtractedBodyText EmailBody
+FROM Emails e
+INNER JOIN Persons p ON e.SenderPersonId=P.Id
+WHERE p.Name='Hillary Clinton'
+  AND e.ExtractedBodyText != ''
+ORDER BY RANDOM()")
+print.table(head(emailsFromHillary))
+```
+
+We'll create a helper function that enables us to look at wordclouds of groups of emails.
+
+```{r}
+library(tm)
+library(wordcloud)
+makeWordCloud <- function(documents) {
+  corpus = Corpus(VectorSource(tolower(documents)))
+  corpus = tm_map(corpus, removePunctuation)
+  corpus = tm_map(corpus, removeWords, stopwords("english"))
+  
+  frequencies = DocumentTermMatrix(corpus)
+  word_frequencies = as.data.frame(as.matrix(frequencies))
+  
+  words <- colnames(word_frequencies)
+  freq <- colSums(word_frequencies)
+  wordcloud(words, freq,
+            min.freq=sort(freq, decreasing=TRUE)[[100]],
+            colors=brewer.pal(8, "Dark2"),
+            random.color=TRUE)  
+}
+```
+
+## Here's the common terms in the emails Hillary Clinton sent.
+```{r}
+makeWordCloud(emailsFromHillary[["EmailBody"]])
+```
+
+Let's look at a sample of some of the messages Hillary Clinton received.
+
+```{r results='asis'}
+emailsToHillary <- dbGetQuery(db, "
+SELECT p.Name Recipient,
+       ExtractedBodyText EmailBody
+FROM Emails e
+INNER JOIN EmailReceivers r ON r.EmailId=e.Id
+INNER JOIN Persons p ON r.PersonId=P.Id
+WHERE p.Name='Hillary Clinton'
+  AND e.ExtractedBodyText != ''
+ORDER BY RANDOM()")
+print.table(head(emailsToHillary))
+```
+
+## Here's the common terms in the emails Hillary Clinton received.
+```{r}
+makeWordCloud(emailsToHillary[["EmailBody"]][1:2000])
+```
+
+## Most common subjects
+```{r results="asis"}
+commonSubjects <- dbGetQuery(db, "
+SELECT MetadataSubject Subject,
+       COUNT(Id) NumberOfOccurences
+FROM Emails
+GROUP BY MetaDataSubject
+ORDER BY COUNT(Id) DESC")
+print.table(head(commonSubjects, n=20))
+```
+
+## Libya Emails
+We can pull out emails on relevant topics. For example, here's a sample of emails that are related to Libya.
+```{r results='asis'}
+libyaEmails <- dbGetQuery(db, "
+SELECT p.Name Sender,
+       ExtractedBodyText EmailBody
+FROM Emails e
+INNER JOIN Persons p ON e.SenderPersonId=P.Id
+WHERE e.ExtractedBodyText LIKE '%Libya%'
+ORDER BY RANDOM()")
+print.table(head(libyaEmails))
+```
