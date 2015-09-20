@@ -27,7 +27,7 @@ library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FAL
 
 ```{r}
 library(RSQLite)
-db <- dbConnect(dbDriver("SQLite"), "../input/database.sqlite")
+db <- dbConnect(dbDriver("SQLite"), "./data/database.sqlite")
 ```
 
 
@@ -51,7 +51,7 @@ tables <- tables %>%
 print.table(tables)
 ```
 
-The emails table contains 7,945 emails that Hillary Clinton sent or received, and the Persons table contains ~500 senders and receivers.
+The emails table contains 7,945 emails that Hillary Clinton sent or received, and the Persons table contains ~500 senders and receivers.s 
 
 Who sent the most messages?
 

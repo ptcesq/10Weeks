@@ -1,0 +1,44 @@
+---
+title: "Clinton Email Analysis"
+author: "Patrick T. Cronin"
+date: "September 19, 2015"
+output: html_document
+---
+
+In March 2015, the US House Select Committe issued a Subpoena to former Secretary of State Hillary Clinton seeking all emails from her personal email server dealing with an attack on our embassy in Beghazi Irac.  In response, Clinton  So far, [Hillary Clinton has released 7,945 emails](https://www.hillaryclinton.com/hillarys-emails-four-sentences/) in response to a FOIA request. The original emails (released as PDF documents) are available on the [State Department's Website](https://foia.state.gov/Search/Results.aspx?collection=Clinton_Email).
+
+
+In typlical Geek form, the folks at Kaggle turned the production into a [Contest](https://www.kaggle.com/c/hillary-clinton-emails); God Bless these guys!  The great thing about the Kaggle competition is that it assembled the data in a semi-structured manner.  We have some information in a structured format, e.g. date, document number, to, from etc. in a structured format. Here is a small sample.      
+
+```{r}
+library(RSQLite)
+setwd("D:/R_Projects/10Weeks/week_11_clinton")
+db <- dbConnect(dbDriver("SQLite"), "./data/database.sqlite")
+```
+
+```{r include=FALSE}
+library(xtable)
+print.table <- function(table) {
+  html <- print(xtable(table), type="html", print.results=FALSE, include.rownames=FALSE)
+  cat(paste0("<div style='width:800; overflow:auto; border-width: 2;'><style>td {padding: 3px;} th {padding: 3px;}</style>", html, "</div>"))
+}
+```
+
+First, let's see what tables we have to work with
+
+```{r results='asis'} 
+library(dplyr)
+tables <- dbGetQuery(db, "SELECT Name FROM sqlite_master WHERE type='table'")
+colnames(tables) <- c("Name")
+tables <- tables %>%
+          rowwise() %>%
+          mutate(RowCount=dbGetQuery(db, paste0("SELECT COUNT(Id) RowCount FROM ", Name))$RowCount[1])
+print.table(tables)
+```
+
+
+
+
+
+
+
