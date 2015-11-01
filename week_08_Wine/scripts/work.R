@@ -5,10 +5,10 @@
 # 
 ###############################################
 
-white <- read.csv("./data/winequality-white.csv", sep=";")
-white$class <- as.factor(ifelse(white$quality <= 5, 0, 1))
-summary(white)
-white <- white[,-12]
+pop <- read.csv("./data/winequality-white.csv", sep=";")
+pop$class <- as.factor(ifelse(pop$quality <= 5, 0, 1))
+summary(pop)
+pop <- pop[,-12]  # modify this to remove original dependent variable 
 
 ################################################
 #
@@ -17,10 +17,10 @@ white <- white[,-12]
 ################################################
 
 set.seed(1234)
-in_train <- sample(1:nrow(white), nrow(white)*.8, replace = FALSE)
-train <- white[in_train,]
-test <- white[-in_train,]
-remove(white, in_train)
+in_train <- sample(1:nrow(pop), nrow(pop)*.8, replace = FALSE)
+train <- pop[in_train,]
+test <- pop[-in_train,]
+remove(pop, in_train)
 
 ###############################################
 #
@@ -69,7 +69,7 @@ perf <- performance(pred,"tpr","fpr")
 auc.perf <- performance(pred, measure="auc")
 auc.perf@y.values
 ROC.Val <- auc.perf@y.values
-main.label <- paste("ROC Curve - AUC=", ROC.Val)
+main.label <- paste("ROC Curve - AUC=", ROC.Val, " Err: ", err)
 plot(perf, colorize=TRUE, main=main.label)
 abline(a=0, b=1)
 
