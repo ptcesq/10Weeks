@@ -5,10 +5,10 @@ library(ROCR)
 set.seed(6678)
 
 # Load data into system 
-spam <- read.csv("D:\\R_Projects\\10weeks\\10Weeks\\week_02_Spambase\\data\\spambase.data", header=FALSE)
+spam <- read.csv("./data/spambase.data", header=FALSE)
 
 # add column names 
-cols <- read.table("D:\\R_Projects\\10weeks\\10Weeks\\week_02_Spambase\\data\\cols.txt", quote="\"", stringsAsFactors=FALSE)
+cols <- read.table("./data/cols.txt", quote="\"", stringsAsFactors=FALSE)
 colnames(spam) <- cols$V1
 rm(cols)
 spam$class <- factor(spam$class, labels=c("spam", "ham"))
