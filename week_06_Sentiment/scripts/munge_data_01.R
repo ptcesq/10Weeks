@@ -15,6 +15,6 @@ colnames(df1) <- c('text', 'target')
 colnames(df2) <- c('text', 'target')
 colnames(df3) <- c('text', 'target')
 
-df <- rbind(df1, df2, df)
+df <- rbind(df1, df2, df1)
 
 saveRDS(df, "./data/labeled_obs.RDS")
