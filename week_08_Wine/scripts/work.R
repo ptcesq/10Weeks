@@ -16,6 +16,7 @@ pop <- pop[,-12]  # modify this to remove original dependent variable
 #
 ################################################
 
+options(digits=4)
 set.seed(1234)
 in_train <- sample(1:nrow(pop), nrow(pop)*.8, replace = FALSE)
 train <- pop[in_train,]
@@ -69,6 +70,7 @@ perf <- performance(pred,"tpr","fpr")
 auc.perf <- performance(pred, measure="auc")
 auc.perf@y.values
 ROC.Val <- auc.perf@y.values
+
 main.label <- paste("ROC Curve - AUC=", ROC.Val, " Err: ", err)
 plot(perf, colorize=TRUE, main=main.label)
 abline(a=0, b=1)
