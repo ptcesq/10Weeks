@@ -5,6 +5,7 @@ df <- readRDS('./data/labeled_obs.RDS')
 library(tm)
 
 df.Corpus <- Corpus(VectorSource(df$text))
+df.target <- df$target
 
 # put everythin in lower case
 df.Corpus <- tm_map(df.Corpus, content_transformer(tolower))
@@ -23,5 +24,26 @@ df.Stopwords <- setdiff(df.Stopwords, c("LOL"))
 df.Corpus <- tm_map(df.Corpus, removeWords, df.Stopwords)
 # remove extra whitespace
 df.Corpus <- tm_map(df.Corpus, stripWhitespace)
+
+# a little cleaning first, take out all empy slots 
+df3 <- data.frame(text=sapply(df.Corpus, `[[`, "content"), stringsAsFactors=FALSE)
+# reattach the classification 
+df3$target <- df.target
+
+# now take out all of the blank rows 
+df3 <- subset(df3, text!=" ")
+
+# add and ID to each record 
+df3$id <- seq(1,nrow(df3))
+
+df.Reader <- readTabular(mapping=list(content="text", target="target", id="id"))
+tm <- VCorpus(DataframeSource(df3), readerControl=list(reader=df.Reader))
+
+
+dtm <- DocumentTermMatrix(tm)
+
+dtm2 <- DocumentTermMatrix(df.Corpus, control=list(weighting=weightTfIdf, minWordLength=2, minDocFreq=5))
+
+
 
 saveRDS(df.Corpus, './data/df.Corpus.RDS')
