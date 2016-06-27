@@ -42,7 +42,7 @@ tm <- VCorpus(DataframeSource(df3), readerControl=list(reader=df.Reader))
 
 dtm <- DocumentTermMatrix(tm)
 
-dtm2 <- DocumentTermMatrix(df.Corpus, control=list(weighting=weightTfIdf, minWordLength=2, minDocFreq=5))
+dtm2 <- DocumentTermMatrix(tm, control=list(weighting=weightTfIdf, minWordLength=2, minDocFreq=5))
 
 
 
