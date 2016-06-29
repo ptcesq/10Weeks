@@ -39,11 +39,7 @@ df3$id <- seq(1,nrow(df3))
 df.Reader <- readTabular(mapping=list(content="text", target="target", id="id"))
 tm <- VCorpus(DataframeSource(df3), readerControl=list(reader=df.Reader))
 
+dtm <- DocumentTermMatrix(tm, control=list(weighting=weightTfIdf, minWordLength=2, minDocFreq=5))
 
-dtm <- DocumentTermMatrix(tm)
+removeSparseTerms(dtm, 0.2)
 
-dtm2 <- DocumentTermMatrix(tm, control=list(weighting=weightTfIdf, minWordLength=2, minDocFreq=5))
-
-
-
-saveRDS(df.Corpus, './data/df.Corpus.RDS')
