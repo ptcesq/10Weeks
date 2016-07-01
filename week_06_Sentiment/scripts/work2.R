@@ -30,6 +30,16 @@ df.Corpus <- tm_map(df.Corpus, stripWhitespace)
 df.Corpus <- tm_map(df.Corpus, PlainTextDocument)
 
 dtm <- DocumentTermMatrix(df.Corpus)
-dtm_2 <- removeSparseTerms(dtm, 0.1)
+
+
+df.matrix <- as.matrix(dtm)
+df <- cbind(df, df.matrix)
+a <- colSums(df[,4:3688])
+b <- which(a > 5)
+keep <- b + 3
+keep <- c(1:3, keep)
+df <- df[,keep]
+
+saveRDS(df, './data/cleaned_data.RDS')
 
 
