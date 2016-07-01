@@ -30,6 +30,5 @@ df.Corpus <- tm_map(df.Corpus, stripWhitespace)
 df.Corpus <- tm_map(df.Corpus, PlainTextDocument)
 
 dtm <- DocumentTermMatrix(df.Corpus)
-dtm_2 <- removeSparseTerms(dtm, 0.1)
 
 
