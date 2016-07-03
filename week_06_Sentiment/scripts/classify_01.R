@@ -59,12 +59,3 @@ with(results, CrossTable(pred, actual, prop.chisq=FALSE,
 
 
 
-<<<<<<< HEAD:week_02/scripts/work.R
-
-
-
-
-
-
-=======
->>>>>>> df1ffe59f7ee5484505589c29cc4900a4dc13dca:week_02_Spambase/scripts/work.R
