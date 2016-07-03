@@ -34,7 +34,11 @@ dtm <- DocumentTermMatrix(df.Corpus)
 # reformat it 
 dtm_matrix <- as.matrix(dtm) 
 
+t1 <- colSums(dtm_matrix)
+
 keepers <- which(t1>5)
+keepers <- sort(keepers, decreasing = TRUE)
+keepers <- keepers[1:50]
 dtm_matrix <- dtm_matrix[,keepers]
 
 df <- cbind(df, dtm_matrix)
