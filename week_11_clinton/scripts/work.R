@@ -1,3 +1,6 @@
+setwd("D:/R_Projects/10Weeks/week_11_clinton")
+
+
 # Libraries 
 require(RSQLite)
 
@@ -8,8 +11,7 @@ db <- dbConnect(dbDriver("SQLite"), "./data/database.sqlite")
 
 
 # Now select the extracted email bodies 
-emailsFromHillary <- dbGetQuery(db, "
-SELECT ExtractedBodyText FROM Emails")
+emailsFromHillary <- dbGetQuery(db, "SELECT ExtractedBodyText FROM Emails")
 print.table(head(emailsFromHillary))
 
 head(emailsFromHillary)
