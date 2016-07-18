@@ -1,19 +1,23 @@
+# generate a sample of time cards, with variation 
+n = 1000 
 
-## read in date/time info in format 'm/d/y h:m:s'
-dates <- c("06/06/2016", "06/07/2016", "06/08/2016", "06/09/2016", "06/10/2016")
-times <- c("08:00:00", "08:00:00", "08:00:00", "08:00:00", "08:00:00")
-x <- paste(dates, times)
-d <- strptime(x, "%m/%d/%Y %H:%M:%S")
-
-n = 100
-cards <- do.call("rbind", replicate(n, d, simplify = FALSE))
+base_date <- c("20081101", "20081101", "20081101", "20081101", "20081101", "20081102", 
+           "20081102", "20081102", "20081102", "20081103")
+base_dates <- rep(base_date, n/length(base_date))
 
 
+base_time <- "08:00:00"
+base_times <- rep(base_time, n)
 
-e <- data.frame(employee = c('a', 'b', 'c', 'd', 'e'))
-n = 100
-t2 <- do.call("rbind", replicate(n, e, simplify = FALSE))
+library(randomNames)
+base_name <- randomNames(n/length(base_date))
+base_names <- rep(base_name, n/length(base_date))
 
-cards <- cbind(cards, t2)
+df <- as.data.frame(cbind(base_dates, base_times, base_names))
 
-# end
+df$date <- paste(df$base_dates, df$base_times)
+
+df$date <- as.POSIXct(df$date, format = "%Y%m%d %H:%M:%S")
+df <- df[,-c(1:2)]
+
+df$date <- df$date + sample(-600:600,n, replace = TRUE)
