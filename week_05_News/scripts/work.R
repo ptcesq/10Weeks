@@ -10,14 +10,14 @@ cols <- read.table("~/R/10Weeks/week_07_Credit/data/cols.txt", header=TRUE, quot
 
 
 # Windows Version 
-# data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
-# cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
+data <- read.csv("./data/votes.csv", header=TRUE)
+cols <- read.csv("./data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
 
 colnames(data) <- cols$col_name
 
 # rename target as target 
 # Don't need to, done in this case. 
-# colnames(data)[61] <- "target"
+colnames(data)[61] <- "target"
 
 #
 # set threshold 

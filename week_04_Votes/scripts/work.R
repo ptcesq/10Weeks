@@ -8,8 +8,8 @@ cols <- read.table("~/R/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, quote
 
 
 # Windows Version 
-# data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
-# cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
+data <- read.csv("./data/votes.csv", header=FALSE)
+cols <- read.csv("./data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
 
 colnames(data) <- cols$col_name
 data$party <- as.factor(ifelse(data$party == "republican", 0, 1))
