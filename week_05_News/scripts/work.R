@@ -22,12 +22,11 @@ rm(cols)
 
 # 
 # In this data set we need to remove the URL (adds nothing to the model and confuses it) 
-# don't need in this case. 
+# don't need in this case and you can't model it with only 4gb
 #
-# data <- subset(data, select = -c(url))
-
-
-
+data <- data[,-1]
+  
+  
 # create test and training sets 
 inTrain <- sample(1:nrow(data), nrow(data) * 0.85) # select 85% of the items 
 train <- data[inTrain, ]
@@ -60,7 +59,7 @@ pred <- prediction(results$pred, results$actual)
 ## computing a simple ROC curve (x-axis: fpr, y-axis: tpr)
 perf <- performance(pred,"tpr","fpr")
 auc.perf <- performance(pred, measure="auc")
-auc.perf@y.values
+print(paste('Accuracy:', auc.perf@y.values))
 ROC.Val <- auc.perf@y.values
 main.label <- paste("ROC Curve - AUC=", ROC.Val)
 plot(perf, colorize=TRUE, main=main.label)
