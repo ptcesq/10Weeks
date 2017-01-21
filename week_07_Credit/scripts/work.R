@@ -1,18 +1,18 @@
 # Set Seed 
 set.seed(1234)
 
+library(readr)
+data <- read_delim("~/r_projects/10Weeks/week_07_Credit/data/german.csv",
+                    " ", escape_double = FALSE, trim_ws = TRUE)
 
-# Unix Version 
-data <- read.csv("~/R/10Weeks/week_05_News/data/OnlineNewsPopularity.csv", stringsAsFactors=FALSE)
-cols <- read.table("~/R/10Weeks/week_05_News/data/col_names.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
+# Read in Column Names 
+columns <- read.csv('./data/cols.txt')
+colnames(data) <- columns$col_name
+
+# Fetch Codes 
+codes <- read.csv('./data/codes.txt')
 
 
-
-# Windows Version 
-# data <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/votes.csv", header=FALSE)
-# cols <- read.csv("D:/R_Projects/10Weeks/week_04_Votes/data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
-
-colnames(data) <- cols$col_name
 
 # rename target as target 
 colnames(data)[61] <- "target"
