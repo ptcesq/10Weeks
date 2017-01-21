@@ -2,15 +2,8 @@
 set.seed(1234)
 
 
-# Unix Version 
-data <- read.table("~/R/10Weeks/week_07_Credit/data/german.csv", quote="\"")
-cols <- read.table("~/R/10Weeks/week_07_Credit/data/cols.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
-
-
-
-
 # Windows Version 
-data <- read.csv("./data/votes.csv", header=TRUE)
+data <- read.csv("./data/news.csv", header=TRUE)
 cols <- read.csv("./data/cols.txt", header=TRUE, stringsAsFactors = FALSE)
 
 colnames(data) <- cols$col_name
@@ -24,7 +17,7 @@ colnames(data)[61] <- "target"
 # or transform dicotomous 
 # 
 #
-data$target <- as.factor(ifelse(data$target == 1, 0, 1))
+data$target <- as.factor(ifelse(data$target >= 1400, TRUE, FALSE))
 rm(cols)
 
 # 

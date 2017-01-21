@@ -35,7 +35,8 @@ pred <- prediction(results$pred, results$actual)
 ## computing a simple ROC curve (x-axis: fpr, y-axis: tpr)
 perf <- performance(pred,"tpr","fpr")
 auc.perf <- performance(pred, measure="auc")
-auc.perf@y.values
+print('Accuracy Rate: ')
+print(auc.perf@y.values)
 ROC.Val <- auc.perf@y.values
 main.label <- paste("ROC Curve - AUC=", ROC.Val)
 plot(perf, colorize=TRUE, main=main.label)

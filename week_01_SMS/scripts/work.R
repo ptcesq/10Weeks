@@ -1,7 +1,6 @@
 # Munge data 
 # set working directory 
-setwd("D:/R_Projects/10Weeks/week_01_SMS")
-
+setwd("~/r_projects/10Weeks/week_01_SMS")
 
 # load data
 df <- read.delim("./data/SMS", header=FALSE, stringsAsFactors=FALSE)
