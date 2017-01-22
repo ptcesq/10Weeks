@@ -47,14 +47,10 @@ with(results, CrossTable(actual, pred, prop.chisq=FALSE,
                          prop.r=FALSE, prop.c=FALSE, prop.t=FALSE, 
                          format="SPSS"))
 
-##################################################
-#
-#   Model Error Rate  
-#
-##################################################
 
-err <- sum(ifelse(results$actual==results$pred, 1, 0))/nrow(test)
-cat("Error: ", err)
+# Contingency Table 
+library(gmodels)
+with(results, CrossTable(actual, pred))
 
 ##################################################
 #
@@ -68,10 +64,10 @@ pred <- prediction(results$pred, results$actual)
 ## computing a simple ROC curve (x-axis: fpr, y-axis: tpr)
 perf <- performance(pred,"tpr","fpr")
 auc.perf <- performance(pred, measure="auc")
-auc.perf@y.values
+print(paste('AUC: ', auc.perf@y.values))
 ROC.Val <- auc.perf@y.values
 
-main.label <- paste("ROC Curve - AUC=", ROC.Val, " Err: ", err)
+main.label <- paste("ROC Curve - AUC=", ROC.Val)
 plot(perf, colorize=TRUE, main=main.label)
 abline(a=0, b=1)
 
